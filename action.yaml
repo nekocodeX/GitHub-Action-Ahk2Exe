@@ -1,0 +1,56 @@
+name: Ahk2Exe
+description: GitHub Action to compile AutoHotKey scripts using Ahk2Exe
+author: nekocodeX
+
+inputs:
+  in:
+    description: The path or file name of the AutoHotKey script to compile
+    required: true
+  out:
+    description: The path or file name of the compiled executable (by default, an executable of the same name will be created in the path of the AutoHotKey script specified by the "in" parameter)
+    required: false
+    default: ''
+  icon:
+    description: The icon of the executable file is specified
+    required: false
+    default: ''
+
+runs:
+  using: composite
+  steps:
+    - name: Install Scoop
+      shell: powershell
+      run: |
+        iwr -useb get.scoop.sh | iex
+        scoop bucket add extras
+
+    - name: Add to environment variables
+      shell: powershell
+      run: Write-Output ('Path=' + $Env:SystemDrive + '\Windows\System32' + ';' + $Env:UserProfile + '\scoop\shims') >> $Env:GITHUB_ENV
+
+    - name: Install Git
+      shell: powershell
+      run: scoop install git
+
+    - name: Install AutoHotkey
+      shell: powershell
+      run: scoop install autohotkey
+
+    - name: Ahk2Exe
+      shell: powershell
+      run: |
+        if (('${{inputs.in}}' -ne '') -and ('${{inputs.out}}' -ne '') -and ('${{inputs.icon}}' -ne '')) {
+          ahk2exe /in '${{inputs.in}}' /out '${{inputs.out}}' /icon '${{inputs.icon}}'
+        } elseif (('${{inputs.in}}' -ne '') -and ('${{inputs.out}}' -ne '')) {
+          ahk2exe /in '${{inputs.in}}' /out '${{inputs.out}}'
+        } elseif (('${{inputs.in}}' -ne '') -and ('${{inputs.icon}}' -ne '')) {
+          ahk2exe /in '${{inputs.in}}' /icon '${{inputs.icon}}'
+        } elseif ('${{inputs.in}}' -ne '') {
+          ahk2exe /in '${{inputs.in}}'
+        } else {
+          throw 'There are no required parameters'
+        }
+
+branding:
+  color: green
+  icon: terminal
