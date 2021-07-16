@@ -28,10 +28,6 @@ runs:
       shell: powershell
       run: Write-Output ('Path=' + $Env:SystemDrive + '\Windows\System32' + ';' + $Env:UserProfile + '\scoop\shims') >> $Env:GITHUB_ENV
 
-    - name: Install Git
-      shell: powershell
-      run: scoop install git
-
     - name: Install AutoHotkey
       shell: powershell
       run: scoop install autohotkey
