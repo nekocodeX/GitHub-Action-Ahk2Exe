@@ -33,7 +33,7 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Ahk2Exe
-        uses: nekocodeX/GitHub-Action-Ahk2Exe@v1
+        uses: nekocodeX/GitHub-Action-Ahk2Exe@main
         with:
           in: example.ahk
 ```
@@ -54,7 +54,7 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Ahk2Exe
-        uses: nekocodeX/GitHub-Action-Ahk2Exe@v1
+        uses: nekocodeX/GitHub-Action-Ahk2Exe@main
         with:
           in: example.ahk
 
