@@ -31,12 +31,15 @@ runs:
       shell: powershell
       run: |
         $params = ''
-        if('${{inputs.in}}' -ne '')
+        if('${{inputs.in}}' -ne ''){
           $params += '/in "${{inputs.in}}" '
-        if('${{inputs.out}}' -ne '')
+        }
+        if('${{inputs.out}}' -ne ''){
           $params += '/out "${{inputs.out}}" '
-        if('${{inputs.icon}}' -ne '')
+        }
+        if('${{inputs.icon}}' -ne ''){
           $params += '/icon "${{inputs.icon}}" '
+        }
         ahk2exe.exe /silent $params | Write-Output
         
 branding:
