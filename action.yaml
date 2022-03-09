@@ -30,17 +30,18 @@ runs:
     - name: Run Ahk2Exe
       shell: pwsh
       run: |
-        $params = ''
+        $command = 'ahk2exe.exe /silent '
         if('${{inputs.in}}' -ne ''){
-          $params += '/in "${{inputs.in}}" '
+          $command += '/in "${{inputs.in}}" '
         }
         if('${{inputs.out}}' -ne ''){
-          $params += '/out "${{inputs.out}}" '
+          $command += '/out "${{inputs.out}}" '
         }
         if('${{inputs.icon}}' -ne ''){
-          $params += '/icon "${{inputs.icon}}" '
+          $command += '/icon "${{inputs.icon}}" '
         }
-        ahk2exe.exe /silent $params | Write-Output
+        $command += "| Write-Output"
+        Invoke-Expression $command
         
 branding:
   color: green
