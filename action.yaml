@@ -18,35 +18,27 @@ inputs:
 runs:
   using: composite
   steps:
-    - name: Install Scoop
-      shell: powershell
-      run: |
-        iwr -useb get.scoop.sh | iex
-        scoop bucket add extras
-
-    - name: Add to environment variables
-      shell: powershell
-      run: Write-Output ('Path=' + $Env:SystemDrive + '\Windows\System32' + ';' + $Env:UserProfile + '\scoop\shims') >> $Env:GITHUB_ENV
-
     - name: Install AutoHotkey
       shell: powershell
-      run: scoop install autohotkey
+      run: |
+        $cwd = (Get-Item .).FullName;
+        Invoke-WebRequest "https://www.autohotkey.com/download/ahk.zip" -OutFile "$cwd\autohotkey.zip";
+        Expand-Archive -Path "$cwd\autohotkey.zip" -DestinationPath "$cwd\_autohotkey\" -Force;
+        Remove-Item -Path "$cwd\autohotkey.zip" -Force
+        $Env:GITHUB_ENV = Write-Output ("$cwd\_autohotkey\;" + "$cwd\_autohotkey\Compiler");
 
-    - name: Ahk2Exe
+    - name: Run Ahk2Exe
       shell: powershell
       run: |
-        if (('${{inputs.in}}' -ne '') -and ('${{inputs.out}}' -ne '') -and ('${{inputs.icon}}' -ne '')) {
-          ahk2exe /in '${{inputs.in}}' /out '${{inputs.out}}' /icon '${{inputs.icon}}'
-        } elseif (('${{inputs.in}}' -ne '') -and ('${{inputs.out}}' -ne '')) {
-          ahk2exe /in '${{inputs.in}}' /out '${{inputs.out}}'
-        } elseif (('${{inputs.in}}' -ne '') -and ('${{inputs.icon}}' -ne '')) {
-          ahk2exe /in '${{inputs.in}}' /icon '${{inputs.icon}}'
-        } elseif ('${{inputs.in}}' -ne '') {
-          ahk2exe /in '${{inputs.in}}'
-        } else {
-          throw 'There are no required parameters'
-        }
-
+        $params = ''
+        if('${{inputs.in}}' -ne '')
+          $params += '/in "${{inputs.in}}" '
+        if('${{inputs.out}}' -ne '')
+          $params += '/out "${{inputs.out}}" '
+        if('${{inputs.icon}}' -ne '')
+          $params += '/icon "${{inputs.icon}}" '
+        ahk2exe.exe /silent $params | Write-Output
+        
 branding:
   color: green
   icon: terminal
