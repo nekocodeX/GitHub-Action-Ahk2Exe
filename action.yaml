@@ -19,7 +19,7 @@ runs:
   using: composite
   steps:
     - name: Install AutoHotkey
-      shell: powershell
+      shell: pwsh
       run: |
         $cwd = (Get-Item .).FullName;
         Invoke-WebRequest "https://www.autohotkey.com/download/ahk.zip" -OutFile "$cwd\autohotkey.zip";
@@ -28,7 +28,7 @@ runs:
         $Env:GITHUB_ENV = Write-Output ("$cwd\_autohotkey\;" + "$cwd\_autohotkey\Compiler");
 
     - name: Run Ahk2Exe
-      shell: powershell
+      shell: pwsh
       run: |
         $params = ''
         if('${{inputs.in}}' -ne ''){
@@ -40,7 +40,7 @@ runs:
         if('${{inputs.icon}}' -ne ''){
           $params += '/icon "${{inputs.icon}}" '
         }
-        ahk2exe.exe /silent $params | Write-Output
+        .\_autohotkey\Compiler\ahk2exe.exe /silent $params | Write-Output
         
 branding:
   color: green
