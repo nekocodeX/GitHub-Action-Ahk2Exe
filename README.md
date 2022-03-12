@@ -14,6 +14,7 @@ Name|Type|Required|Description
 in|String|True|The path or file name of the AutoHotKey script to compile
 out|String|False|The path or file name of the compiled executable (by default, an executable of the same name will be created in the path of the AutoHotKey script specified by the "in" parameter)
 icon|String|False|The icon of the executable file is specified
+base|String|False|The name of the base file to be used for Ahk2Exe
 
 ## 📦 Example usage
 
